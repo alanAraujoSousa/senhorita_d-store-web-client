@@ -5,7 +5,7 @@ import { OrderService } from './order.service';
 import { environment } from 'src/environments/environment';
 import { CartModelPublic, CartModelServer } from '../models/cart.model';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { ProductModelServer } from '../models/product.model';
 
 @Injectable({
@@ -178,5 +178,72 @@ export class CartService {
     }
   }
 
-  
+  CheckoutFromCart(userId: number) {
+    this.http.post(`${this.serverUrl}/orders/payment`, null).subscribe((res: {success: boolean}) => {
+      if (res.success) {
+        this.resetServerData();
+        this.http.post(`${this.serverUrl}/orders/`, {
+          userId: userId,
+          products: this.cartDataClient.prodData
+        }).subscribe((data: OrderResponse) => {
+          
+          this.orderService.getSingleOrder(data.order_id).then(prods => {
+            if (data.success) {
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  message: data.message,
+                  products: prods,
+                  orderId: data.order_id,
+                  total: this.cartDataClient.total
+                }
+              };
+
+              // TODO HIDE SPINNER
+              this.router.navigate(['/thankyou'], navigationExtras).then(p => {
+                this.cartDataClient = {total: 0, prodData: [{inCart: 0, id: 0}]};
+                this.cartTotal$.next(0);
+                localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+              });            
+            }
+          });
+        });
+      }
+    });
+  }
+
+  private CalculateTotal() {
+    let total = 0;
+
+    this.cartDataServer.data.forEach(p => {
+      const { numInCart } = p;
+      const { price } = p.product;
+      
+      total += numInCart * price;
+    });
+    this.cartDataServer.total = total;
+    this.cartTotal$.next(this.cartDataServer.total);
+  }
+
+  private resetServerData() {
+    this.cartDataServer = {
+      total: 0, 
+      data: [{
+        numInCart: 0,
+        product: undefined
+      }]
+    };
+
+    this.cartData$.next({ ... this.cartDataServer});
+  }
+
+}
+
+interface OrderResponse {
+  order_id: number;
+  success: boolean;
+  message: string;
+  products: [{
+    id: string,
+    numInCart: string
+  }];
 }
