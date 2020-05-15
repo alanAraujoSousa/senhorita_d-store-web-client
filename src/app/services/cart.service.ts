@@ -151,4 +151,32 @@ export class CartService {
       }
     }
   }
+
+  DeleteProductFromCart(index: number) {
+    if (window.confirm('Are you sure you want to remove the item?')) {
+      this.cartDataServer.data.splice(index, 1);
+      this.cartDataClient.prodData.splice(index, 1);
+      // TODO CALCULATE TOTAL AMOUNT
+      this.cartDataClient.total = this.cartDataServer.total;
+
+      if (this.cartDataClient.total === 0) {
+        this.cartDataClient = { total: 0, prodData: [{ inCart: 0, id: 0 }]}
+        localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+      } else {
+        localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+      }
+
+      if (this.cartDataServer.total === 0) {
+        this.cartDataServer = { total: 0, data: [{ numInCart: 0, product: undefined }] }
+        this.cartData$.next({ ... this.cartDataServer });
+      } else {
+        this.cartData$.next({ ... this.cartDataServer });
+      }
+    } else {
+      // IF THE USER CLICKS THE CANCEL BUTTON
+      return;
+    }
+  }
+
+  
 }
