@@ -40,7 +40,9 @@ export class CartService {
   constructor(private http: HttpClient,
               private productService: ProductsService,
               private orderService: OrderService,
-              private router: Router) { 
+              private router: Router,
+              private toast: ToastrService,
+              private spinner: NgxSpinnerService) { 
     
     this.cartTotal$.next(this.cartDataServer.total);
     this.cartData$.next(this.cartDataServer);
@@ -82,14 +84,18 @@ export class CartService {
       if (this.cartDataServer.data[0].product === undefined) {
         this.cartDataServer.data[0].product = prod;
         this.cartDataServer.data[0].numInCart = quantity !== undefined ? quantity : 1;
-
+        this.CalculateTotal();
         this.cartDataClient.prodData[0].inCart = this.cartDataServer.data[0].numInCart;
         this.cartDataClient.prodData[0].id = prod.id;
         this.cartDataClient.total = this.cartDataServer.total;        
         localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
         this.cartData$.next({ ... this.cartDataServer});
-
-        //TODO DISPLAY A TOAST NOTIFICATION
+        this.toast.success(`${prod.name} added to the cart`, `Product Added`, {
+          timeOut: 1500,
+          progressBar: true,
+          progressAnimation: 'increasing',
+          positionClass: 'toast-top-right'
+        });
       } else {
         let index = this.cartDataServer.data.findIndex(p => p.product.id === prod.id); // -1 or a positive value
         
@@ -101,7 +107,12 @@ export class CartService {
           }
 
           this.cartDataClient.prodData[index].inCart = this.cartDataServer.data[index].numInCart;
-          // TODO DISPLAY A TOAST NOTIFICATION
+          this.toast.info(`${prod.name} quantity updated in the cart`, `Product Updated`, {
+            timeOut: 1500,
+            progressBar: true,
+            progressAnimation: 'increasing',
+            positionClass: 'toast-top-right'
+          });
 
         } else {
           this.cartDataServer.data.push({
@@ -114,9 +125,14 @@ export class CartService {
             id: prod.id
           });
 
-          // TODO DISPLAY A TOAST NOTIFICATION
-        
-          // TODO CALCULATE TOTAL AMOUNT
+          this.toast.info(`${prod.name} quantity updated in the cart`, `Product Updated`, {
+            timeOut: 1500,
+            progressBar: true,
+            progressAnimation: 'increasing',
+            positionClass: 'toast-top-right'
+          });
+
+          this.CalculateTotal();
           this.cartDataClient.total = this.cartDataServer.total;
           localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
           this.cartData$.next({ ... this.cartDataServer });
@@ -198,7 +214,7 @@ export class CartService {
                 }
               };
 
-              // TODO HIDE SPINNER
+              this.spinner.hide().then();
               this.router.navigate(['/thankyou'], navigationExtras).then(p => {
                 this.cartDataClient = {total: 0, prodData: [{inCart: 0, id: 0}]};
                 this.cartTotal$.next(0);
@@ -206,6 +222,15 @@ export class CartService {
               });            
             }
           });
+        });
+      } else {
+        this.spinner.hide().then();
+        this.router.navigateByUrl('/checkout').then();
+        this.toast.error(`Sorry, failed to book the order`, `Order Status`, {
+          timeOut: 1500,
+          progressBar: true,
+          progressAnimation: 'increasing',
+          positionClass: 'toast-top-right'
         });
       }
     });
