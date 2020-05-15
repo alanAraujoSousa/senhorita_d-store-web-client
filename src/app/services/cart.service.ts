@@ -76,4 +76,79 @@ export class CartService {
       });
     }
   }
+
+  AddProductToCart(id: number, quantity?: number) {
+    this.productService.getProduct(id).subscribe(prod => {
+      if (this.cartDataServer.data[0].product === undefined) {
+        this.cartDataServer.data[0].product = prod;
+        this.cartDataServer.data[0].numInCart = quantity !== undefined ? quantity : 1;
+
+        this.cartDataClient.prodData[0].inCart = this.cartDataServer.data[0].numInCart;
+        this.cartDataClient.prodData[0].id = prod.id;
+        this.cartDataClient.total = this.cartDataServer.total;        
+        localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+        this.cartData$.next({ ... this.cartDataServer});
+
+        //TODO DISPLAY A TOAST NOTIFICATION
+      } else {
+        let index = this.cartDataServer.data.findIndex(p => p.product.id === prod.id); // -1 or a positive value
+        
+        if (index !== -1) {
+          if (quantity !== undefined && quantity <= prod.quantity) {
+            this.cartDataServer.data[index].numInCart = this.cartDataServer.data[index].numInCart < prod.quantity ? quantity : prod.quantity;
+          } else {
+            this.cartDataServer.data[index].numInCart = this.cartDataServer.data[index].numInCart < prod.quantity ? this.cartDataServer.data[index].numInCart : prod.quantity;
+          }
+
+          this.cartDataClient.prodData[index].inCart = this.cartDataServer.data[index].numInCart;
+          // TODO DISPLAY A TOAST NOTIFICATION
+
+        } else {
+          this.cartDataServer.data.push({
+            numInCart: 1,
+            product: prod
+          });
+
+          this.cartDataClient.prodData.push({
+            inCart: 1,
+            id: prod.id
+          });
+
+          // TODO DISPLAY A TOAST NOTIFICATION
+        
+          // TODO CALCULATE TOTAL AMOUNT
+          this.cartDataClient.total = this.cartDataServer.total;
+          localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+          this.cartData$.next({ ... this.cartDataServer });
+        }
+      }
+    });
+  }
+
+  UpdateCartItems(index: number, increase: boolean) {
+    let data = this.cartDataServer.data[index];
+
+    if (increase) {
+      data.numInCart < data.product.quantity ? data.numInCart++ : data.product.quantity;
+      this.cartDataClient.prodData[index].inCart = data.numInCart;
+    
+      // TODO CALCULATE TOTAL AMOUNT
+      this.cartDataClient.total = this.cartDataServer.total;
+      localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+      this.cartData$.next({ ... this.cartDataServer });
+    } else {
+      data.numInCart--;
+
+      if (data.numInCart < 1) {
+        // TODO DELETE THE PRODUCT FROM CART
+        this.cartData$.next({ ... this.cartDataServer });
+      } else {
+        this.cartData$.next({ ... this.cartDataServer });
+        this.cartDataClient.prodData[index].inCart = data.numInCart;
+        // TODO CALCULATE TOTAL AMOUNT
+        this.cartDataClient.total = this.cartDataServer.total;
+        localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
+      }
+    }
+  }
 }
