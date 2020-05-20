@@ -103,18 +103,20 @@ export class CartService {
           if (quantity !== undefined && quantity <= prod.quantity) {
             this.cartDataServer.data[index].numInCart = this.cartDataServer.data[index].numInCart < prod.quantity ? quantity : prod.quantity;
           } else {
-            this.cartDataServer.data[index].numInCart = this.cartDataServer.data[index].numInCart < prod.quantity ? this.cartDataServer.data[index].numInCart : prod.quantity;
+            this.cartDataServer.data[index].numInCart < prod.quantity ? this.cartDataServer.data[index].numInCart++ : prod.quantity;
           }
 
           this.cartDataClient.prodData[index].inCart = this.cartDataServer.data[index].numInCart;
+          this.CalculateTotal();
+          this.cartDataClient.total = this.cartDataServer.total;
+          localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
           this.toast.info(`${prod.name} quantity updated in the cart`, `Product Updated`, {
             timeOut: 1500,
             progressBar: true,
             progressAnimation: 'increasing',
             positionClass: 'toast-top-right'
           });
-
-        } else {
+        } else { // if product is not in the cart array
           this.cartDataServer.data.push({
             numInCart: 1,
             product: prod
@@ -125,7 +127,7 @@ export class CartService {
             id: prod.id
           });
 
-          this.toast.info(`${prod.name} quantity updated in the cart`, `Product Updated`, {
+          this.toast.success(`${prod.name} added to the cart`, `Product Added`, {
             timeOut: 1500,
             progressBar: true,
             progressAnimation: 'increasing',
