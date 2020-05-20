@@ -265,6 +265,15 @@ export class CartService {
     this.cartData$.next({ ... this.cartDataServer});
   }
 
+  CalculateSubTotal(index): number {
+    let subTotal = 0;
+
+    const p = this.cartDataServer.data[index];
+    subTotal = p.product.price * p.numInCart;
+
+    return subTotal;
+  }
+
 }
 
 interface OrderResponse {
