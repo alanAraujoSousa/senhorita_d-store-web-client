@@ -7,6 +7,8 @@ import { CartModelPublic, CartModelServer } from '../models/cart.model';
 import { BehaviorSubject } from 'rxjs';
 import { Router, NavigationExtras } from '@angular/router';
 import { ProductModelServer } from '../models/product.model';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
