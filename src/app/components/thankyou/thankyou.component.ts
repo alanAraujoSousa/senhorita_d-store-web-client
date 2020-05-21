@@ -11,7 +11,7 @@ export class ThankyouComponent implements OnInit {
 
   message: string;
   orderId: number;
-  products: any[] = [];
+  products: ProductResponseModel[] = [];
   cartTotal: number;
 
   constructor(private router: Router,
@@ -39,9 +39,9 @@ export class ThankyouComponent implements OnInit {
 
 interface ProductResponseModel {
   id: number;
-  title: string;
+  name: string;
   description: string;
   price: number;
-  quantityOrdered: number;
   image: string;
+  quantityOrdered: number;
 }
