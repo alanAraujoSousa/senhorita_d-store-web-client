@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AuthService, SocialUser, GoogleLoginProvider } from 'angularx-social-login';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
-import { stringify } from 'querystring';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +14,39 @@ export class UserService {
   private SERVER_URL = environment.SERVER_URL;
   private user;
   authState$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.auth);
-  userData$: BehaviorSubject<SocialUser | ResponseModel> = new BehaviorSubject<SocialUser | ResponseModel>(null);
+  userData$: BehaviorSubject<SocialUser | ResponseModel | object> = new BehaviorSubject<SocialUser | ResponseModel | object>(null);
+  loginMessage$ = new BehaviorSubject<string>(null);
 
   constructor(private authService: AuthService,
               private httpClient: HttpClient) {
     
     authService.authState.subscribe((user: SocialUser) => {
       if (user != null) {
-        this.auth = true;
-        this.authState$.next(this.auth);
-        this.userData$.next(user);
+        this.httpClient.get(`${this.SERVER_URL}/users/validate/${user.email}`)
+          .subscribe((res: { status: boolean, user: object }) => {
+          //  No user exists in database with Social Login
+          if (!res.status) {
+            // Send data to backend to register the user in database so that 
+            // the user can place orders against his user id
+            this.registerUser({
+              email: user.email,
+              fname: user.firstName,
+              lname: user.lastName,
+              password: '123456'
+            }, user.photoUrl, 'social').subscribe(res => {
+              if (res.message === 'Registration successful') {
+                this.auth = true;
+                this.authState$.next(this.auth);
+                this.userData$.next(user);
+              }
+            });
+          } else {
+            this.auth = true;
+            this.authState$.next(this.auth);
+            this.userData$.next(res.user);
+          }
+        });
+
       }
     });
   }
@@ -31,11 +54,16 @@ export class UserService {
   // login user with enaum and passsword
   loginUser(email: string, password: string) {
     this.httpClient.post(`${this.SERVER_URL}/auth/login`, { email, password })
+      .pipe(catchError((err: HttpErrorResponse) => of(err.error.message)))
       .subscribe((data: ResponseModel) => {
-        this.auth = data.auth;
-        this.authState$.next(this.auth);
-        this.userData$.next(data);
-      })
+        if (typeof (data) === 'string') {
+          this.loginMessage$.next(data);
+        } else {
+          this.auth = data.auth;
+          this.authState$.next(this.auth);
+          this.userData$.next(data);
+        }
+      });
   }
 
   // Google Authentication
@@ -48,6 +76,19 @@ export class UserService {
     this.auth = false;
     this.authState$.next(this.auth);
   }
+
+  registerUser(formData: any, photoUrl?: string, typeOfUser?: string): Observable<{ message: string }> {
+    const { fname, lname, email, password } = formData;
+    console.log(formData);
+    return this.httpClient.post<{ message: string }>(`${this.SERVER_URL}/auth/register`, {
+      email,
+      lname,
+      fname,
+      typeOfUser,
+      password,
+      photoUrl: photoUrl || null
+    });
+  }
 }
 
 export interface ResponseModel {
@@ -59,4 +100,6 @@ export interface ResponseModel {
   lname: string;
   photoUrl: string;
   userId: number;
+  type: string;
+  role: number;
 }
