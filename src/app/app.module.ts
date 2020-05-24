@@ -14,7 +14,7 @@ import { CartComponent } from './components/cart/cart.component'
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
+import { EmailValidator, FormsModule, NG_ASYNC_VALIDATORS, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { GoogleLoginProvider, SocialLoginModule, AuthServiceConfig } from 'angularx-social-login';
@@ -53,7 +53,8 @@ export function provideConfig() {
     NgxSpinnerModule,
     ToastrModule.forRoot(),
     SocialLoginModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {
