@@ -10,6 +10,7 @@
             </ul>
             <ul class="header-links pull-right">
                 <li><a routerLink="/profile"><i class="fa fa-user-o"></i>{{authState === false ? 'LOGIN' : 'My Account'}}</a></li>
+                <li *ngIf="!authState"><a routerLink="/register"><i class="fa fa-user-plus"></i>REGISTER</a></li>
             </ul>
         </div>
     </div>

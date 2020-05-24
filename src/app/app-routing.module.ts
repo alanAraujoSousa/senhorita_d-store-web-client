@@ -8,6 +8,7 @@ import { ThankyouComponent } from './components/thankyou/thankyou.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileGuard } from './profile.guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { RegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
     path: 'cart', component: CartComponent
   },
   {
-    path: 'checkout', component: CheckoutComponent
+    path: 'checkout', component: CheckoutComponent, canActivate: [ProfileGuard]
   },
   {
     path: 'thankyou', component: ThankyouComponent
@@ -30,6 +31,12 @@ const routes: Routes = [
   },
   {
     path: 'profile', component: ProfileComponent, canActivate:[ProfileGuard]
+  },
+  {
+    path: 'register', component: RegisterComponent
+  },
+  {
+    path: '**', pathMatch: 'full', redirectTo: ''
   }
 ];
 
