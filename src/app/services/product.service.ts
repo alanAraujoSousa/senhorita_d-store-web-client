@@ -8,7 +8,7 @@ import { ServerResponse } from 'http';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class ProductService {
 
   SERVER_URL = environment.SERVER_URL;
 

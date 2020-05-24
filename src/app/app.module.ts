@@ -8,7 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { HomeComponent } from './components/home/home.component';
-import { ProductsComponent } from './components/products/products.component';
+import { ProductComponent } from './components/product/product.component';
 import { ThankyouComponent } from './components/thankyou/thankyou.component';
 import { CartComponent } from './components/cart/cart.component'
 import { HttpClientModule } from '@angular/common/http';
@@ -37,7 +37,7 @@ export function provideConfig() {
     FooterComponent,
     CheckoutComponent,
     HomeComponent,
-    ProductsComponent,
+    ProductComponent,
     ThankyouComponent,
     CartComponent,
     LoginComponent,

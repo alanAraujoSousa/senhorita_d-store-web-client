@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ProductsService } from './products.service';
+import { ProductService } from './product.service';
 import { OrderService } from './order.service';
 import { environment } from 'src/environments/environment';
 import { CartModelPublic, CartModelServer } from '../models/cart.model';
@@ -38,9 +38,8 @@ export class CartService {
   cartTotal$ = new BehaviorSubject<number>(0);
   cartData$ = new BehaviorSubject<CartModelServer>(this.cartDataServer); 
 
-
   constructor(private http: HttpClient,
-              private productService: ProductsService,
+              private productService: ProductService,
               private orderService: OrderService,
               private router: Router,
               private toast: ToastrService,

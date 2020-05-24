@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { ProductsService } from 'src/app/services/products.service';
+import { ProductService } from 'src/app/services/product.service';
 import { CartService } from 'src/app/services/cart.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -7,11 +7,11 @@ import { map } from 'rxjs/operators';
 declare let $: any;
 
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit {
+export class ProductComponent implements OnInit, AfterViewInit {
 
   id: number;
   product;
@@ -19,7 +19,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
  @ViewChild("quantity") quantityInput; 
 
-  constructor(private productService: ProductsService,
+  constructor(private productService: ProductService,
               private cartService: CartService,
               private route: ActivatedRoute) { }
   

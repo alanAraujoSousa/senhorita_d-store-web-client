@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from 'src/app/services/products.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { ProductModelServer, ServerResponse } from 'src/app/models/product.model';
 import { CartService } from 'src/app/services/cart.service';
@@ -13,12 +13,12 @@ export class HomeComponent implements OnInit {
 
   products: ProductModelServer[] = [];
 
-  constructor(private productsService: ProductsService,
+  constructor(private productService: ProductService,
               private cartService: CartService,
               private router: Router) { }
 
   ngOnInit(): void {
-    this.productsService.getAllProducts().subscribe((prods: ServerResponse) => {
+    this.productService.getAllProducts().subscribe((prods: ServerResponse) => {
       this.products = prods.products;
     });
   }
