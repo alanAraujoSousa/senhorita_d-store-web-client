@@ -14,6 +14,7 @@ import { CartComponent } from './components/cart/cart.component'
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SocialLoginModule } from 'angularx-social-login'
@@ -39,7 +40,8 @@ import { SocialLoginModule } from 'angularx-social-login'
     HttpClientModule,
     NgxSpinnerModule,
     ToastrModule.forRoot(),
-    SocialLoginModule
+    SocialLoginModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
