@@ -50,7 +50,7 @@ export class UserService {
   }
 }
 
-interface ResponseModel {
+export interface ResponseModel {
   token: string;
   auth: boolean;
   email: string;
