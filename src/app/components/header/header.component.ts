@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
   authState: boolean;
   
   constructor(public cartService: CartService,
-              private userService: UserService) { }
+              public userService: UserService) { }
 
   ngOnInit(): void {
     this.cartService.cartTotal$.subscribe(total => this.cartTotal = total);

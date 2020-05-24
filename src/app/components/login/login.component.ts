@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit{
   email: string;
   password: string;
   loginMessage: string;
+  userRole: number;
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit{
   ngOnInit(): void {
     this.userService.authState$.subscribe(authState => {
       if (authState) {
-        this.router.navigateByUrl(this.route.snapshot.queryParams['returnUrl'] || '/profile');
+        this.router.navigateByUrl(this.route.snapshot.queryParams.returnUrl || '/profile');
       } else {
         this.router.navigateByUrl('/login');
       }

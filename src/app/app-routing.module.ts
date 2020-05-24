@@ -6,7 +6,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ThankyouComponent } from './components/thankyou/thankyou.component';
 import { LoginComponent } from './components/login/login.component';
-import { ProfileGuard } from './profile.guard';
+import { ProfileGuard } from './guard/profile.guard';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RegisterComponent } from './components/register/register.component';
 

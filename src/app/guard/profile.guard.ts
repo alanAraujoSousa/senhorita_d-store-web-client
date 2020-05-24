@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserService } from './services/user.service';
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ProfileGuard implements CanActivate {
         return true;
       }
 
-      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } }).then();
       return false; 
     }
   
