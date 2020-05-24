@@ -17,7 +17,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { GoogleLoginProvider, SocialLoginModule, AuthServiceConfig } from 'angularx-social-login'
+import { GoogleLoginProvider, SocialLoginModule, AuthServiceConfig } from 'angularx-social-login';
+import { RegisterComponent } from './components/register/register.component'
 
 let config: AuthServiceConfig = new AuthServiceConfig([
   {
@@ -40,7 +41,8 @@ export function provideConfig() {
     ThankyouComponent,
     CartComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
