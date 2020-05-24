@@ -14,11 +14,12 @@ import { CartComponent } from './components/cart/cart.component'
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-import { EmailValidator, FormsModule, NG_ASYNC_VALIDATORS, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { GoogleLoginProvider, SocialLoginModule, AuthServiceConfig } from 'angularx-social-login';
-import { RegisterComponent } from './components/register/register.component'
+import { RegisterComponent } from './components/register/register.component';
+import { HomeLayoutComponent } from './components/home-layout/home-layout.component';
 
 let config: AuthServiceConfig = new AuthServiceConfig([
   {
@@ -42,7 +43,8 @@ export function provideConfig() {
     CartComponent,
     LoginComponent,
     ProfileComponent,
-    RegisterComponent
+    RegisterComponent,
+    HomeLayoutComponent
   ],
   imports: [
     BrowserModule,
