@@ -17,7 +17,17 @@ import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { SocialLoginModule } from 'angularx-social-login'
+import { GoogleLoginProvider, SocialLoginModule, AuthServiceConfig } from 'angularx-social-login'
+
+let config: AuthServiceConfig = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider('549565092163-1og1rfbu964rpspsvsr2jfve3dhh288h.apps.googleusercontent.com')
+  }
+]);
+export function provideConfig() {
+  return config;
+}
 
 @NgModule({
   declarations: [
@@ -43,7 +53,12 @@ import { SocialLoginModule } from 'angularx-social-login'
     SocialLoginModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
