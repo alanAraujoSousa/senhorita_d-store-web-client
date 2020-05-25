@@ -5,7 +5,8 @@
     "outDir": "./out-tsc/app",
     "types": [],
     "paths": {
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@admin/*": ["projects/admin/src/app/*"]
     }
   },
   "files": [

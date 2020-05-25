@@ -16,7 +16,8 @@
       "dom"
     ],
     "paths": {
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@admin/*": ["projects/admin/src/app/*"]
     }
   },
   "angularCompilerOptions": {
