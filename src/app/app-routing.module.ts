@@ -10,6 +10,7 @@ import { ProfileGuard } from './guard/profile.guard';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { HomeLayoutComponent } from './components/home-layout/home-layout.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 const routes: Routes = [
   // Define routes for the landing / home page, create a separate component for the layout of home page
@@ -43,6 +44,9 @@ const routes: Routes = [
         path: 'register', component: RegisterComponent
       },
     ]
+  },
+  {
+    path: 'admin', component: AdminComponent
   },
   // Wildcard Route if no route is found == 404 NOTFOUND page
   {

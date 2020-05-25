@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class UserService {
   userRole: number;
 
   constructor(private authService: AuthService,
-              private httpClient: HttpClient) {
+              private httpClient: HttpClient,
+              private router: Router) {
     
     authService.authState.subscribe((user: SocialUser) => {
       if (user != null) {
@@ -48,6 +50,10 @@ export class UserService {
             this.userRole = res.user.role;
             this.authState$.next(this.auth);
             this.userData$.next(res.user);
+
+            if (this.userRole === 777) {
+              this.router.navigateByUrl('admin').then();
+            }
           }
         });
 
@@ -67,6 +73,10 @@ export class UserService {
           this.userRole = data.role;
           this.authState$.next(this.auth);
           this.userData$.next(data);
+
+          if (this.userRole === 777) {
+            this.router.navigateByUrl('admin').then();
+          }
         }
       });
   }
